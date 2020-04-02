@@ -474,12 +474,601 @@ var persona = {
 };
 var apellido = 'apellido';
 
+/******************************************************/
+
+//Object.is() para comparar
+
+console.log( +0 == -0);
+console.log( +0 === -0);
+console.log( Object.is (+0, -0));
+console.log('===');
+console.log( NaN == NaN );
+console.log( NaN === NaN );
+console.log( Object.is (NaN, NaN));
+console.log('===');
+console.log( 5 == 5);
+console.log( 5 == '5');
+console.log( 5 === 5);
+console.log( 5 === '5');
+console.log('===');
+console.log( Object.is (5, 5));
+console.log( Object.is (5, '5'));
+
+/******************************************************/
+
+//Object.assign() 
+//Nos permite tomar las props de un objeto y heredarlas a otra.
+
+//ES5
+function mezclar(objReceptor, objDonador){
+    Object.keys(objDonador).forEach(function(key){
+        objReceptor[key] = objDonador[key];
+    });
+    return objReceptor;
+}
+var objReceptor = {};
+var objDonador = {
+    nombre: 'mi archivo js'
+};
+console.log( mezclar( objReceptor, objDonador ) );
+
+console.log(Object.assign(objReceptor, objDonador ) );
+console.log( objDonador );
+
+/******************************************************/
+//Orden de enumeración de los objetos.
+/**
+ * - Todas las llaves van en orden ascendente.
+ * - Todas las llaves tipos string, van ordenadas en la manera
+ * que fueron agregadas al objeto.
+ * - Todos los símbolos en el orden que fueron agregados al objeto.
+ * 
+ */
+
+var objeto = {
+    c: 1,
+    0: 1,
+    x: 1,
+    15: 1,
+    r: 1,
+    3: 1,
+    b: 1
+};
+objeto.d = 1;
+objeto['2'] = 1;
+objeto['a'] = 1;
+
+console.log( Object.getOwnPropertyNames( objeto ).join(',') );
+console.log( Object.keys( objeto ) ); //Ordenado
+console.log( JSON.stringify( objeto )); //Ordenado
+
+for (i in Object.keys( objeto )) {
+    console.log( Object.keys( objeto )[i] ); //Ordenado
+}
+
+/******************************************************/
+//Prototypes
+/**
+ * Los prototypes son un conjunto de normas para integrar
+ * POO en JS, pero con los PROTOTYPES, nosotros somos capaces 
+ * de realizar tareas como:
+ * - Herencia.
+ * - Encapsulamiento.
+ * - Abstracción.
+ * - Polimorfismo.
+ */
+
+ let gato = {
+     sonido(){
+         console.log('miau!');
+     },
+     chillido(){
+         console.log('MIAU!!');
+     },
+ };
+ let perro = {
+     sonido(){
+         console.log('guau!');
+     }
+ };
+let angora = Object.create(gato);
+console.log(Object.getPrototypeOf( angora ) === gato);
+angora.sonido();
+angora.chillido(); //Hasta acá es un gato
+
+Object.setPrototypeOf( angora, perro );
+
+console.log( Object.getPrototypeOf( angora ) === gato ); //Acá es un perro
+angora.sonido();
+angora.chillido();//Acá rompe
+
+/******************************************************/
+
+//Acceso al propotipo con la referencia SUPER.
+/*
+- Acceder a los métodos de los objetos que estan siendo heredados de otro objeto.
+*/
+let personaSaludo = {
+    saludar(){
+        return 'Hola';
+    }
+};
+let amigoSaludo = {
+    saludar(){
+        return super.saludar() + ', saludos desde ES6!!'; //Accedemos al prototype de 'personaSaludo' y lo concatenamos con 'amigo'.
+    }
+};
+console.log( amigo.saludar() );
+
+/******************************************************/
+//Desestructuración de objetos
+let ajustes = {
+    nombre: 'Maximiliano Gomez',
+    email: 'maxi.r.gomez@gmail.com',
+    facebook: 'maximiliano.dev',
+    google: 'maxi.r.gomez@gmail.com',
+    premium: 'true'
+};
+
+//ES5
+let nombreDes = ajustes.nombre, //Destructuración del objeto en ES5
+    emailDes = ajustes.email,
+    facebookDes = ajustes.facebook,
+    googleDes = ajustes.google,
+    premiumDes = ajustes.premium;
+
+console.log( 
+    nombreDes,
+    emailDes,
+    facebookDes,
+    googleDes,
+    premiumDes
+);
+
+//ES6
+let { nombre, email, facebook, google, premium } = ajustes; //Destructuración del objeto en ES6
+console.log(nombre, email, facebook, google, premium);
+
+let { nombre, email, facebook, google, premium, twitter='tuitDeMaxi' } = ajustes; //Agregamos una variable a la destructuración
+console.log(twitter);
+
+let { nombre, email, facebook, google, premium:dePago } = ajustes; //Cambiamos el nombre de una variable en la destructuración
+console.log(dePago);
+
+/******************************************************/
+//Destructuración de objetos anidados
+let autoGuardado = {
+    archivo : 'app.js',
+    cursor: {
+        linea: 7,
+        columna: 16
+    },
+    ultimoArchivo: {
+        archivo: 'index.html',
+        cursor: {
+            linea: 9,
+            columna: 20
+        }
+    },
+    otroNodo: {
+        subNodo: {
+            cursor: {
+                linea:11,
+                columna: 11
+            }
+        }
+    }
+};
+let { cursor:cursorActivo } = autoGuardado;
+console.log(cursorActivo);
+//ES5
+let otroSuperNodo2 = autoGuardado.otroNodo.subNodo.cursor;
+console.log(otroSuperNodo2);
+
+//ES6
+let { otroNodo:{ subNodo:{ cursor:otroSuperNodo } } } = autoGuardado;
+console.log(otroSuperNodo);
 
 
+/******************************************************/
+//Destructuración de arreglos
+
+let frutas = ['banano', 'pera', 'uva'];
+let [ fruta1, fruta2 ] = frutas;
+console.log(fruta1);
+console.log(fruta2);
+
+//ES6
+let [ ,,frutas3 ] = frutas;
+console.log(frutas3);
+
+let a = 1;
+let b = 2;
+let temp;
+
+temp = a;
+a = b;
+b = a;
+
+console.log(a);
+console.log(b);
+
+[a,b] = [b,a];
+console.log(a);
+console.log(b);
+
+/******************************************************/
+//Destructuración de arreglos anidados.
+let colores1 = ['rojo', ['verde','amarillo'],'morado','naranja'];
+let [ color1, [ color2 ] ] = colores1;
+console.log(color1);
+console.log(color2);
+
+let colores2 = ['rojo', 'verde','amarillo','morado','naranja'];
+let [ colorPrincipal, ...demasColores ] = colores2; //Toma el primer valor de mi arreglo, el spread toma el resto.
+let [ colorPrincipal,colorSecundario , ...demasColores ] = colores2; //Toma el primer valor de mi arreglo, el spread toma el resto.
+console.log(colorPrincipal);
+console.log(colorSecundario);
+
+/******************************************************/
+//Valores por defecto en la destructuración
+let frutas = ['banano'] ;
+let [ fruta1 ] = frutas;
+console.log(fruta1);
+let [ fruta1, fruta2] = frutas; //Fruta2 da undefined
+let [ fruta1, fruta2 = 'manzana' ] = frutas; //Si tiene un valor, lo pasa, sino fruta2 = manzana.
+console.log(fruta2);
+frutas =  ['banana', 'pera'];
+console.log(fruta1);
+console.log(fruta2);
+
+/******************************************************/
+//Destructuración de parámetros
+//function crearJugador( nickName, opciones ) -> sin destructurar
+function crearJugador( nickName, 
+    { hp, sp, clase} = { hp:100, sp:50, clase:'Mago' }  //Agrego la estructura y una por defecto
+    ){
+    /*
+    - SIN DESTRUCTURAR - 
+    opciones = opciones || {};
+    let hp = opciones.hp,
+        sp = opciones.sp,
+        clase = opciones.clase;
+    */
+    console.log(nickName, hp, sp, clase);
+    //Código para crear el jugador        
+
+}
+crearJugador( 'Strider', {
+    hp: 500,
+    sp: 100,
+    clase: 'Warrior'
+} );
+
+/******************************************************/
+//Simbolos y propiedades
+//-> Sirve para poner nombres de props y así asegurarse de que no van a tener problemas con otras librerias o códigos.
+let primerNombre = Symbol();
+let segundoNombre = Symbol();
+let persona = {
+    [segundoNombre]: 'Roberto'
+};
+persona[primerNombre] = 'Maximiliano';
+console.log( persona[primerNombre] ); //Lo llamamos como una propiedad computada, con los corchetes del arreglo.
+console.log( persona[segundoNombre] );
+
+let primerNombre = Symbol('primer nombre');
+console.log(primerNombre);
+let segundoNombre = Symbol();
+console.log(segundoNombre);
+
+let simbolo1 = Symbol('simbolo');
+let simbolo2 = Symbol('simbolo');
+
+console.log( simbolo1 == simbolo2 );
+console.log( simbolo1 === simbolo2 );
+console.log( Object.is(simbolo1, simbolo2) );
+
+console.log( typeof primerNombre);
+//No se puede usar como STRING el symbol
+
+//Los simbolos son absolutamente distintos aunque tengan el mismo atributo.
+
+/******************************************************/
+//Compartiendo símbolos - Symbol.for() y Symbol.keyFor()
+
+let userID = Symbol.for('userID'); //Si queremos verificar de que ese Symbol no esta creado o si lo esta volverlo a utilizar.
+let objeto = {};
+
+objeto[userID] = '12345';
+console.log( objeto[userID] );
+console.log( userID );
+
+//"Unimos" 'userID2' con 'userID', así es que da true cuando lo validamos.
+let userID2 = Symbol.for('userID'); 
+console.log( userID == userID2 ); 
+console.log( userID === userID2 ); 
+console.log( Object.is(userID, userID2) );  //Magia
+
+console.log(objeto[userID2]);
+console.log(userID2);
+
+let id = Symbol.for('id unico');
+console.log( Symbol.keyFor( id ) ); //Comparte el alias, que es el value pasado como parametro.
+
+let id2 = Symbol.for('id unico');
+console.log( Symbol.keyFor( id2 ) );  //Comparte el alias, que es el value pasado como parametro.
+
+let id3 = Symbol('id unico');
+console.log( Symbol.keyFor( id3 ) ); //Da undefined porque no existe nada asociado en el código al id3, estamos creando uno nuevo.
+
+/******************************************************/
+
+// Coerción de símbolos
+let id = Symbol.for('id');
+let numero = 10;
+let texto = '10';
+let bool = true;
+let notAnumber = NaN;
+console.log( numero + texto );
+
+console.log( 'Mi simbolo es: '+ String(id) );//convertimos a string el symbol
+
+/******************************************************/
+
+//Recuperando las propiedades de símbolo
+
+let id = Symbol.for('id');
+let activo = Symbol.for('activo')
+
+let persona = {
+    [id]: '123',
+    [activo]: true,
+    nombre: 'Maximiliano',
+    apellido: 'Gomez',
+    edad: 27
+};
+for( key in persona ){
+    console.log( key, persona[key] ); //Me devuelve el objeto en consola.
+}
+let simbolos = Object.getOwnPropertySymbols(persona); //Función para traer la propiedad de symbols.
+console.log(simbolos); //Medevuelve los simbolos porque los tome antes.
+
+for (i in simbolos) {
+    console.log(simbolos[i], Symbol.keyFor(simbolos[i]));
+}
+
+/******************************************************/
+//Los SET 
+/*
+Son una lista ordenada de valores sin duplicados.
+Permiten un rápido acceso a la data que contienen.
+*/
+//Creando sets agregando items y buscando elementos.
+
+let items = new Set();
+items.add(10);
+items.add(11);
+items.add(12);
+items.add(13);
+items.add(14);
+items.add(15);
+items.add(7);
+items.add(7);
+items.add(7);
+items.add(7);
+items.add(7);
+items.add('7');
+items.add(7);
+
+console.log(items.size); //Me devuelve todo, excepto las repeticiones del 7. Porque no toma valores repetidos.
+console.log(items);//Me devuelve el objeto de SET.
+
+let items2 = new Set( [ 1,2,3,4,5,6,7,8,8,8,8,8,8] ); 
+console.log( items.has(8) ); //Recorre el objeto de SET y me devuelve un boolean si encuentra lo que mando a buscar.
+
+/******************************************************/
+//Removiendo valores de los SETs
+
+let items = new Set([1,2,3,4,5]);
+console.log(items.size);
+console.log(items);
+items.delete( 3 );
+console.log(items.size);
+console.log(items);
+items.delete( 3 ); //Si lo mando de nuevo, si existe lo borra sino, no hace nada.
+
+items.clear(); //Borra TODO del SET
+
+/******************************************************/
+//forEach() en los SETs
+
+let personas = new Set(['Fernando', 'Maria', 'Pedro']);
+personas.forEach(function(valor, llave, setOriginal){
+    console.log(valor, llave, setOriginal);
+    console.log( personasl === setOriginal );
+});
+
+/******************************************************/
+
+//Convertir un set en array
+
+let numeros = [1,2,3,4,5,6,7];
+//let numeros = [1,2,3,4,5,6,7,7,7,7,7,7,7,2,3,1];
+let setNumeros = new Set(numeros);
+console.log(setNumeros);
+let arrayNumeros = [...setNumeros];  //Lo convierto con un SPREAD en un ARRAY.
+//let arrayNumeros = eliminarDuplicados (numeros);
+//console.log(arrayNumeros);
+
+console.log(arrayNumeros);
+
+function eliminaDuplicados( items ){
+    let set = new Set(items);
+    return [...set];
+    // return [... new Set(items)];
+}
+
+/******************************************************/
+//WeeckSets
+/*
+- En un weekset, ADD(), HAS(), REMOVE(), dan un error si enviamos
+como parámetro algo que no sea un objeto.
+- No tiene manera de hacer repeticiones o ciclos for in.
+- Los weeksets no tienen keys(), values(), por lo que no hay manera
+vía programación de saber cuantos elementos hay dentro.
+- No tienen un for-each tampoco.
+- No tiene propiedad size.
+*/
 
 
+/******************************************************/
+//MAPS
+/*
+Nuevo tipo de colección de datos.
+Tiene una llave y un valor. Key value pair
+Tienen: 
+- Has
+- Delete
+- Clear
+- Size
+- Iteraciones
+*/
+//Mapas y sus métodos
+let mapa = new Map();
+mapa.set('nombre', 'Maximiliano');
+mapa.set('edad', 27);
+mapa.set('apellido'); //Como no tiene nada, da undefined.
+mapa.set(  ); // Tira doble undefined
+mapa.set({},{},{hola:'hola mundo'}); 
+console.log(mapa);
+
+console.log(mapa);
+console.log(mapa.size);
+console.log(mapa.get('nombre'));
+console.log(mapa.get('edad'));
+console.log(mapa.has('nombre'));//Si queremos verificar que la llave exista.
+console.log(mapa.has('edad'));//Si queremos verificar que la llave exista.
+mapa.delete('nombre'); //Elimino 'nombre'.
+console.log(mapa.has('nombre'));
+console.log(mapa.get('nombre'));
+
+mapa.set('edad');
+console.log(mapa);
+
+mapa.clear(); //Elimina todo el mapa
+console.log(mapa);
+
+/******************************************************/
+
+//Inicializaciones de los mapas.
+let mapas = new Map( [ [ ['nombre','maximiliano'] ,['edad',27 ] ] ] ); //Así se inicializa por defecto el mapa.
+// [['',''],['','']]
+// Puedo pasarle un null undefined.
+console.log(mapas);
+
+let mapasDos = new Map( [ [ ['nombre','maximiliano'] ,[null, undefined ] ] ] );
+console.log(mapasDos);
+console.log(mapa.get(undefined));
+
+/******************************************************/
+//forEach() de los mapas
+let mapa = new Map(['nombre', 'Maximiliano'], ['Edad', 27]);
+mapa.forEach(function(value, llave, mapaOrigen){
+    console.log(`Llave: ${llave}, valor: ${valor}, Edad: ${edad}`);
+    console.log(mapaOrigen);
+})
+mapa.forEach( (valor, llave ) => console.log(`Llave: ${llave}, valor: ${valor}`));  //Lo mismo con arrow.
+
+/******************************************************/
+//Nuevo ciclo FOR - OF
+let numeros = [100, 200, 300, 400, 500];
+
+for (let numero of numeros) {
+    console.log(numero); //Nuevo ciclo FOR
+}
 
 
+let personasForOf = [
+    { nombre: 'Maximiliano', edad: 27 },
+    { nombre: 'Fernando', edad: 26 },
+    { nombre: 'Martin', edad: 25 },
+    { nombre: 'Hernando', edad: 24 },
+    { nombre: 'Arnando', edad: 23 }
+];
+for(per of personas){
+    console.log(per.nombre, per.edad);
+}
 
+/******************************************************/
+//Class
+
+//ES5
+function Persona( nombre ){
+    this.nombre = nombre;
+    this.gritarNombre = function(){
+        console.log(this.nombre.toUpperCase());
+    }
+}
+Persona.prototype.decirNombre = function(){
+    console.log(this.nombre);
+}
+let fernando = new Persona ('Fernando');
+fernando.decirNombre();
+fernando.gritarNombre();
+
+//ES6
+class Persona{
+    //Definición básica de una clase
+    constructor(nombre){
+        this.nombre = nombre;
+    }
+    //Persona.prototype.decirNombre es lo mismo
+    decirNombre(){
+        console.log(this.nombre);
+    }
+}
+let fernando = new Persona ('Fernando'); 
+fernando.decirNombre();
+console.log( fernando instanceof Persona );
+console.log( fernando instanceof Object );
+
+console.log( typeof Persona ); //Devuelve que es una function.
+
+/******************************************************/
+
+//¿Por qué usar la sintaxis de clase?
+/*
+- Las clases funcionan muy parecido hasla declaración
+- Todo el código dentro de una clase funciona de modo estricto -> strict mode
+- Todos los metodos NO son enumerables.
+- Todos los métodos internos, no tienen un constructor.
+- Llamar una clase sin el new da error.
+- Intentar renombrar el nombre de la clase dentro de algun método 
+de la misma da error.
+- Tienen metodos estaticos y privados.
+*/
+
+/******************************************************/
+
+//Clases como expresiones
+let PersonaClass = class{
+    constructor(){
+        this.nombre = '';
+        this.edad = 30;
+        this.direccion = 'lorem ';
+    }
+    decirNombre(){
+        console.log('helloWorld');
+        
+    }
+};
+
+let fernandoClass = new PersonaClass();
+console.log( typeof fernandoClass);
+console.log( fernandoClass instanceof PersonaClass );
+
+/******************************************************/
+//Clases como parámetros
 
 
