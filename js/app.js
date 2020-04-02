@@ -1069,6 +1069,141 @@ console.log( typeof fernandoClass);
 console.log( fernandoClass instanceof PersonaClass );
 
 /******************************************************/
+
 //Clases como parámetros
+function creadorClases( definicionClase ){
+    return new definicionClase();
+}
+let objeto = creadorClases( class{
+    constructor(){
+        this.nombre = undefined;
+        this.edad = 30;
+    }
+    saludar(){
+        console.log('Hola!');
+        
+    }
+});
+objeto.saludar();
+
+class Cuadrado{
+    constructor(lado){
+        this.lado = lado;
+    }
+    getArea(){
+        return this.lado * this.lado;
+    }
+};
+function imprimirCuadrado( cuadrado ){
+    if(!(cuadrado instanceof Cuadrado)){ //Le pregunto que si la definición de la clase es instancia de CUADRADO
+        console.error('El parámetro enviado no es un cuadrado.');
+        return;
+    }
+    console.log( cuadradro.getArea() );
+    
+}
+let mesa = new Cuadrado(10);
+//let mesa = new Cuadrado('1234'); -> Esto da error.
+imprimirCuadrado(mesa);
+
+/******************************************************/
+//Miembros estáticos y métodos computados
+
+let nombreMetodo = 'gritarNombre';
+class Persona {
+    constructor( nombre ){
+        this.nombre = nombre;
+    }
+    decirNombre(){
+        console.log( this.nombre );
+        
+    }
+    //Computado
+    /*
+    Son métodos cuyo nombre se puede definir mediante una variable.
+    */
+    [ nombreMetodo ](){
+        console.log(this.nombre.toUpperCase());
+    }
+
+
+    //Estático
+    /*
+    Es un método que nos permite a nosotros utilizar un método dentro de la misma sin instanciar la clase.
+    */
+   static crear( nombre ){
+       return new Persona ( nombre );
+   }
+}
+let yo = Persona.crear('Maximiliano'); //Static
+console.log(yo); //Static
+
+/******************************************************/
+//Herencia de las clases
+/* 
+Transferir métodos y props a un hijo.  
+*/
+class Rectangulo{
+    constructor(alto,largo){
+        this.alto = alto;
+        this.largo = largo;
+    }
+    getArea(){
+        return this.alto * this.largo;
+    }
+}
+let rectangulo = new Rectangulo(3, 2);
+console.log( rectangulo.getArea() );
+
+
+class Cuadrado extends Rectangulo{ //Con EXTENDS le digo que es hija de RECTANGULO
+    constructor(alto){
+        //super();    -> Si lo dejo así, me trae el constructor de la misma forma que lo tiene el padre.
+        super( alto, alto ); //Acá solo me trae el valor de ALTO
+    }
+    getArea(){ 
+        return this.alto * this.alto; //Así sobre escribo
+        //return super.getArea(); Así uso el método del PADRE
+    }
+}
+let cuadradoClass = new Cuadrado (3);
+console.log( cuadradoClass.getArea() );
+console.log( cuadrado instanceof Cuadrado ); //¿Que devuelve esto?
+console.log( cuadrado instanceof Rectangulo ); //¿Que devuelve esto?
+
+/******************************************************/
+//Promesas
+
+function tareaAsincrona(){
+    let promesa = new Promise( (resolve, reject) => {
+        
+        setTimeout( function(){
+            console.log('Proceso asincrono terminado');
+            reject();
+            //resolve(); me devuelve todo bien.
+        },1300 )
+    }) //Por convencion son así los nombres
+    return promesa;
+    /*
+    Espera dos argumentos
+    - El primero cuando todo funciona bien y lo segundo cuando algo falla.
+    */
+}
+tareaAsincrona().then( 
+    function(){ 
+        console.log('todo ok!'); //primer parametro es RESOLVE
+    }, 
+    function(){ 
+        console.log('todo mal!'); //segundo parametro es REJECT
+    } 
+);
+/******************************************************/
+
+
+
+
+
+
+
 
 
